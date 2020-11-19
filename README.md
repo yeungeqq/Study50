@@ -5,7 +5,7 @@
 
 #### Homepage
 
-The homepage contain a banner which has three moving slides. Each slide has a brief description and illiustration of the web application function with caption and image. Users can change the slides by clicking the bullets at two sides of the banner.
+The homepage contains a banner which has three moving slides. Each slide has a brief description and illiustration of the web application function with caption and image. Users can change the slides by clicking the bullets at two sides of the banner.
 Users are required to sign up in order to use the web applicaiton. Each user will acces their own study schedule after logging in, and the schedule would not be interrupted by other users.
 
 #### Sign-up
