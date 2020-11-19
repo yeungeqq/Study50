@@ -1,0 +1,206 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Subject
+{% endblock %}
+
+{% block main %}
+    <script>
+        function score_submit()
+        {
+            document.getElementById("addscore").submit();
+        }
+        function target_submit()
+        {
+            document.getElementById("settarget").submit();
+        }
+    </script>
+    <style>
+        tbody
+        {
+            background-color: white;
+        }
+        .subtable
+        {
+            margin: auto;
+            width: 100%;
+        }
+    </style>
+    <table class="table" style="border: 3px solid darkgreen; border-collapse: collapse">
+        <thread>
+            <tr style="background-color: lightgreen">
+                <th>Subject</th>
+                <th>Assignment</th>
+                <th>Sub-score</th>
+                <th>Cumulative Score/Target Score</th>
+                <th>Remarks</th>
+            </tr>
+        </thread>
+
+        <tbody>
+            {% set count = namespace(value=0) %}
+            {% for subject in course %}
+            <tr style="border-top: 2px solid darkgreen">
+                <td>{{subject["code"]}} {{subject["subject"]}}</td>
+                <td style="padding: 5px">
+                    <table class="subtable">
+                        {% if subject["asm1"] %}
+                            <tr>
+                                <td>{{subject["asm1"]}}</td>
+                            </tr>
+                        {% endif %}
+                        {% if subject["asm2"] %}
+                            <tr>
+                                <td>{{subject["asm2"]}}</td>
+                            </tr>
+                        {% endif %}
+                        {% if subject["asm3"] %}
+                            <tr>
+                                <td>{{subject["asm3"]}}</td>
+                            </tr>
+                        {% endif %}
+                        {% if subject["asm4"] %}
+                            <tr>
+                                <td>{{subject["asm4"]}}</td>
+                            </tr>
+                        {% endif %}
+                        {% if subject["asm5"] %}
+                            <tr>
+                                <td>{{subject["asm5"]}}</td>
+                            </tr>
+                        {% endif %}
+                        {% if subject["asm6"] %}
+                            <tr>
+                                <td>{{subject["asm6"]}}</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </td>
+                <td style="padding: 5px">
+                    <table class="subtable">
+                        {% for subscore in subscores[count.value] %}
+                            {% if subscore %}
+                            <tr>
+                                <td>{{subscore}}</td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </td>
+                <td>{{scores[count.value]}}/{{targets[count.value]}}</td>
+                {% if targets[count.value]|int() > scores[count.value]|int() %}
+                    <td>{{targets[count.value]|int() - scores[count.value]|int()}} marks to go!</td>
+                {% else %}
+                    <td style="color: green">Achieved</td>
+                {% endif %}
+            {% set count.value = count.value + 1 %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#target">
+        Set Target
+    </button>
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#score">
+        Update Score
+    </button>
+
+    </table>
+    <div class="modal fade" id="score" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Update Score</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+             <form name="addscore" action="/subject" method="post" style="width: 100%">
+                <div class="form-group">
+                    <select class="form-control" name="subject">
+                       <option disabled selected value="">Subject</option>
+                       {% for i in subjects %}
+                           <option value="{{i.subject}}">{{i.subject}}</option>
+                       {% endfor %}
+                    </select>
+                </div>
+              <div>
+                <p>Assignment 1 Score: <input autocomplete="off" placeholder="Score" class="form-control" style="width: 50%" name="score1" type="text"></p>
+                <p>Assignment 2 Score: <input autocomplete="off" class="form-control" style="width: 50%" name="score2" type="text"></p>
+                <p>Assignment 3 Score: <input autocomplete="off" class="form-control" style="width: 50%" name="score3" type="text"></p>
+                <p>Assignment 4 Score: <input autocomplete="off" class="form-control" style="width: 50%" name="score4" type="text"></p>
+                <p>Assignment 5 Score: <input autocomplete="off" class="form-control" style="width: 50%" name="score5" type="text"></p>
+                <p>Assignment 6 Score: <input autocomplete="off" class="form-control" style="width: 50%" name="score6" type="text"></p>
+              </div></br>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" onclick="score_submit()" class="btn btn-primary" value="Save changes">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="target" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Set Target</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <table style="margin: auto; width: 50%">
+                <tr>
+                    <td>
+                        <form name="settarget" action="/subject" method="post">
+                            <div class="form-group">
+                                <select class="form-control" name="subject">
+                                   <option disabled selected value="">Subject</option>
+                                   {% for i in subjects %}
+                                       <option value="{{i.subject}}">{{i.subject}}</option>
+                                   {% endfor %}
+                                </select>
+                            </div>
+                            <div><input autocomplete="off" placeholder="Target (Out of 100)" class="form-control" name="target" type="text"></div></br>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" onclick="target_submit()" class="btn btn-primary" value="Save changes">
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="remarks" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Remarks</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <table style="margin: auto; width: 50%">
+                <tr>
+                    <td><form action="/subject" method="post"><div><input autocomplete="off" placeholder="Score (Out of 100)" class="form-control" name="asm" type="text"></div></form></td>
+                </tr>
+              </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

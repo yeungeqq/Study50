@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Record
+{% endblock %}
+
+{% block main %}
+    <style>
+        tbody
+        {
+            background-color: white;
+        }
+        .subtable
+        {
+            margin: auto;
+            width: 100%;
+        }
+    </style>
+    {% set count = namespace(value=0) %}
+    {% for semesters in semester %}
+    <h4 style="text-align: center" class="alert alert-primary" role="alert">Semester {{semesters['semester']}}</h3>
+    <table class="table" style="border: 3px solid saddlebrown; border-collapse: collapse">
+        <thread>
+            <tr style="background-color: lightyellow">
+                <th>Subject</th>
+                <th>Assignment</th>
+                <th>Sub-score</th>
+                <th>Target Score</th>
+                <th>Final Score</th>
+                <th>Status</th>
+            </tr>
+            {% set counts = namespace(value=0) %}
+            {% for subjects in subject[count.value] %}
+            <tr>
+                <td>{{subjects}}</td>
+                <td style="padding: 5px">
+                    <table class="subtable">
+                        {% for i in range(6) %}
+                        {% if asm[count.value][counts.value][i] %}
+                        <tr>
+                            <td>{{asm[count.value][counts.value][i]}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                </td>
+                <td style="padding: 5px">
+                    <table class="subtable">
+                        {% for i in range(6) %}
+                        {% if subscore[count.value][counts.value][i] %}
+                        <tr>
+                            <td>{{subscore[count.value][counts.value][i]}}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                </td>
+                <td>{{target[count.value][counts.value]}}</td>
+                <td>{{score[count.value][counts.value]}}</td>
+                {% if score[count.value][counts.value]|int() >= target[count.value][counts.value]|int() %}
+                <td style="color: green">Achieved</td>
+                {% else %}
+                <td style="color: red">Not Achieved</td>
+                {% endif %}
+            </tr>
+            {% set counts.value = counts.value + 1 %}
+            {% endfor %}
+
+        </thread>
+        <tbody>
+
+        </tbody>
+    </table>
+    {% set count.value = count.value + 1 %}
+    {% endfor %}
+    {% if not semester %}
+        <h4 style="text-align: center" class="alert alert-secondary" role="alert">Record is empty</h3>
+    {% endif %}
+{% endblock %}

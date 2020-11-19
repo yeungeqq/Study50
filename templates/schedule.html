@@ -1,0 +1,321 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Schedule
+{% endblock %}
+
+{% block main %}
+    <script>
+      function sub_submit()
+      {
+        document.getElementById("addsubject").submit();
+      }
+      function asm_submit()
+      {
+        document.getElementById("addasm").submit();
+      }
+      function create()
+      {
+        document.getElementById("create").submit();
+      }
+      function remove()
+      {
+        document.getElementById("removesbj").submit();
+      }
+      var a = "{{ due1 }}";
+      var b = "{{ due2 }}";
+      var c = "{{ due3 }}";
+      var d = "{{ due4 }}";
+      var e = "{{ due5 }}";
+      var f = "{{ due6 }}";
+      function due1()
+      {
+        if (a == 7)
+        {
+          document.write("X");
+        }
+      }
+    </script>
+    <style>
+        tbody
+        {
+            background-color: white;
+        }
+        .week
+        {
+            background-color: transparent;
+        }
+    </style>
+    <table class="table" style="border: 3px solid navy; border-collapse: collapse">
+        <thread>
+            <tr style="background-color: lightblue">
+                <th style="width: 45%">Subject</th>
+                <th>Assignment</th>
+                {% for i in range(13) %}
+                  <th style="width: 5%">{{i + 1}}</th>
+                {% endfor %}
+            </tr>
+        </thread>
+        <tbody>
+          {% set count = namespace(value=0) %}
+          {% for subject in course %}
+            <tr style="border-top: 2px solid navy">
+              <td style="border-right: 1px solid lightgrey">{{subject["code"]}} {{subject["subject"]}}</td>
+              {% if subject["asm1"] %}
+                <td style="border: 1px solid lightgrey">{{subject["asm1"]}}</td>
+                {% for i in range(13) %}
+                  <td style="border: 1px solid lightgrey">
+                  {% if i + 1 == sbj[count.value][0] %}
+                    <img src="/static/star.png" alt="X">
+                  {% endif %}
+                  </td>
+                {% endfor %}
+              {% else %}
+                <td> </td>
+                {% for i in range(13) %}
+                <td style="border: 1px solid lightgrey"> </td>
+                {% endfor %}
+              {% endif %}
+            </tr>
+            {% if subject["asm2"] %}
+            <tr>
+              <td> </td>
+              <td style="border: 1px solid lightgrey">{{subject["asm2"]}}</td>
+              {% for i in range(13) %}
+              <td style="border: 1px solid lightgrey">
+              {% if i + 1 == sbj[count.value][1] %}
+                  <img src="/static/star.png" alt="X">
+              {% endif %}
+              </td>
+              {% endfor %}
+            </tr>
+            {% endif %}
+            {% if subject["asm3"] %}
+            <tr>
+              <td> </td>
+              <td style="border: 1px solid lightgrey">{{subject["asm3"]}}</td>
+              {% for i in range(13) %}
+              <td style="border: 1px solid lightgrey">
+              {% if i + 1 == sbj[count.value][2] %}
+                  <img src="/static/star.png" alt="X">
+              {% endif %}
+              </td>
+              {% endfor %}
+            </tr>
+            {% endif %}
+            {% if subject["asm4"] %}
+            <tr>
+              <td> </td>
+              <td style="border: 1px solid lightgrey">{{subject["asm4"]}}</td>
+              {% for i in range(13) %}
+              <td style="border: 1px solid lightgrey">
+              {% if i + 1 == sbj[count.value][3] %}
+                  <img src="/static/star.png" alt="X">
+              {% endif %}
+              </td>
+              {% endfor %}
+            </tr>
+            {% endif %}
+            {% if subject["asm5"] %}
+            <tr>
+              <td> </td>
+              <td style="border: 1px solid lightgrey">{{subject["asm5"]}}</td>
+              {% for i in range(13) %}
+              <td style="border: 1px solid lightgrey">
+              {% if i + 1 == sbj[count.value][4] %}
+                  <img src="/static/star.png" alt="X">
+              {% endif %}
+              </td>
+              {% endfor %}
+            </tr>
+            {% endif %}
+            {% if subject["asm6"] %}
+            <tr>
+              <td> </td>
+              <td style="border: 1px solid lightgrey">{{subject["asm6"]}}</td>
+              {% for i in range(13) %}
+              <td style="border: 1px solid lightgrey">
+              {% if i + 1 == sbj[count.value][5] %}
+                  <img src="/static/star.png" alt="X">
+              {% endif %}
+              </td>
+              {% endfor %}
+            </tr>
+            {% endif %}
+          {% set count.value = count.value + 1 %}
+          {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newsubject">
+      Add New Subject
+    </button>
+    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#newasm">
+      Edit Assignment
+    </button>
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#newsemester">
+      Create New Semester
+    </button>
+    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#remove">
+      Remove Subject
+    </button>
+
+    <div class="modal fade" id="newsubject" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%; text-align: left">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add New Subject</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form name="addsubject" action="/schedule" method="post" style="width: 100%">
+              <div>
+                <input autocomplete="off" placeholder="Subject Name" class="form-control" style="width: 100%" name="subject" type="text">
+                <input autocomplete="off" placeholder="Subject Code" class="form-control" style="width: 100%" name="code" type="text">
+                <input autocomplete="off" placeholder="Target Score" class="form-control" style="width: 100%" name="target" type="text">
+              </div></br>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" onclick="sub_submit()" class="btn btn-primary" value="Save changes">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="newsemester" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Create New Semester</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form name="create" action="/schedule" method="post" class="modal-body">
+            <div>
+              Are you sure to create a new semester? This will move all your subjects to "Record" section, and you cannot undo this action.
+              <input type="hidden" name="move" value="yes">
+            </div></br>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" onclick="create()" class="btn btn-danger" value="Confirm">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+<div class="modal fade" id="remove" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Remove Subject</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="removesbj" action="/schedule" method="post" style="width: 100%">
+          <div class="form-group">
+            <p>Select a subject to remove. You are not able to undo this action.</p>
+              <select class="form-control" name="remove">
+                  <option disabled selected value="">Subject</option>
+                  {% set counting = namespace(value=0) %}
+                  {% for i in subjects %}
+                      <option value="{{subject_id[counting.value]['subject_id']}}">{{i.subject}}</option>
+                      {% set counting.value = counting.value + 1 %}
+                  {% endfor %}
+              </select>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" onclick="remove()" class="btn btn-danger" value="Confirm">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="modal fade" id="newasm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Assignment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form name="addasm" action="/schedule" method="post" style="width: 100%">
+              <div class="form-group">
+                  <select class="form-control" name="subject">
+                      <option disabled selected value="">Subject</option>
+                      {% for i in subjects %}
+                          <option value="{{i.subject}}">{{i.subject}}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+              <div>
+                <input autocomplete="off" placeholder="Assignment 1" class="form-control" style="width: 50%" name="asm1" type="text">
+                <select class="form-control" name="due1">
+                      <option disabled selected value="">Due</option>
+                      {% for i in range(13) %}
+                          <option value="{{i + 1}}">Week {{i + 1}}</option>
+                      {% endfor %}
+                </select>
+                <input autocomplete="off" placeholder="Weight" class="form-control" style="width: 18%" name="weight1" type="text">%
+                <input autocomplete="off" placeholder="Assignment 2" class="form-control" style="width: 50%" name="asm2" type="text">
+                <select class="form-control" name="due2">
+                      <option disabled selected value="">Due</option>
+                      {% for i in range(13) %}
+                          <option value="{{i + 1}}">Week {{i + 1}}</option>
+                      {% endfor %}
+                </select>
+                <input autocomplete="off" placeholder="Weight" class="form-control" style="width: 18%" name="weight2" type="text">%
+                <input autocomplete="off" placeholder="Assignment 3" class="form-control" style="width: 50%" name="asm3" type="text">
+                <select class="form-control" name="due3">
+                      <option disabled selected value="">Due</option>
+                      {% for i in range(13) %}
+                          <option value="{{i + 1}}">Week {{i + 1}}</option>
+                      {% endfor %}
+                </select>
+                <input autocomplete="off" placeholder="Weight" class="form-control" style="width: 18%" name="weight3" type="text">%
+                <input autocomplete="off" placeholder="Assignment 4" class="form-control" style="width: 50%" name="asm4" type="text">
+                <select class="form-control" name="due4">
+                      <option disabled selected value="">Due</option>
+                      {% for i in range(13) %}
+                          <option value="{{i + 1}}">Week {{i + 1}}</option>
+                      {% endfor %}
+                </select>
+                <input autocomplete="off" placeholder="Weight" class="form-control" style="width: 18%" name="weight4" type="text">%
+                <input autocomplete="off" placeholder="Assignment 5" class="form-control" style="width: 50%" name="asm5" type="text">
+                <select class="form-control" name="due5">
+                      <option disabled selected value="">Due</option>
+                      {% for i in range(13) %}
+                          <option value="{{i + 1}}">Week {{i + 1}}</option>
+                      {% endfor %}
+                </select>
+                <input autocomplete="off" placeholder="Weight" class="form-control" style="width: 18%" name="weight5" type="text">%
+                <input autocomplete="off" placeholder="Assignment 6" class="form-control" style="width: 50%" name="asm6" type="text">
+                <select class="form-control" name="due6">
+                      <option disabled selected value="">Due</option>
+                      {% for i in range(13) %}
+                          <option value="{{i + 1}}">Week {{i + 1}}</option>
+                      {% endfor %}
+                </select>
+                <input autocomplete="off" placeholder="Weight" class="form-control" style="width: 18%" name="weight6" type="text">%
+              </div></br>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" onclick="asm_submit()" class="btn btn-primary" value="Save changes">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
